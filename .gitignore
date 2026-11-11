@@ -1,0 +1,29 @@
+# Local credentials and environment configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# Node / frontend build output
+node_modules/
+frontend/dist/
+npm-debug.log*
+
+# Editors and OS files
+.DS_Store
+.idea/
+.vscode/

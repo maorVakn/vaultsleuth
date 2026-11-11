@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vaultsleuth"
+version = "0.1.0"
+description = "AI Agent that diagnoses and debugs HashiCorp Vault permission and policy issues"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "hvac>=2.1.0",
+    "pydantic>=2.0.0",
+    "requests>=2.31.0",
+    "google-genai>=1.0.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+]
+
+[tool.hatch.build.targets.wheel]
+only-include = ["agent.py", "vault_tools.py", "backend.py"]

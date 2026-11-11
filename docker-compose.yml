@@ -1,0 +1,37 @@
+services:
+  vault:
+    image: hashicorp/vault:latest
+    ports:
+      - "127.0.0.1:${VAULT_DEV_PORT:-8201}:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: "dev-token"
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+    cap_add:
+      - IPC_LOCK
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn backend:app --host 0.0.0.0 --port 8000
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: ${VAULT_TOKEN:-dev-token}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      VAULTSLEUTH_ALLOWED_ORIGINS: ${VAULTSLEUTH_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173}
+      VAULTSLEUTH_ALLOW_PRIVATE_VAULT: "true"
+    depends_on:
+      - vault
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE: http://localhost:8000
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      - backend
